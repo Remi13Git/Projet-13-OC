@@ -64,5 +64,16 @@ CREATE TABLE Message (
  FOREIGN KEY (sender_id)   REFERENCES `User`(id)       ON DELETE CASCADE,
  FOREIGN KEY (receiver_id) REFERENCES `User`(id)       ON DELETE CASCADE,
  FOREIGN KEY (thread_id)   REFERENCES ChatThread(id)   ON DELETE CASCADE,
- INDEX idx_thread_timestamp (thread_id, timestamp),
+ INDEX idx_thread_timestamp (thread_id, timestamp)
+) ENGINE=InnoDB;
+
+CREATE TABLE Payment (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reservation_id INT NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  provider VARCHAR(100),
+  transaction_id VARCHAR(255) UNIQUE,
+  amount DECIMAL(10,2) NOT NULL,
+  payment_date DATE NOT NULL,
+  FOREIGN KEY (reservation_id) REFERENCES Reservation(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
