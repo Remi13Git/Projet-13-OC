@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { ChatComponent } from './chat/chat.component';
 
 @Component({
@@ -10,92 +11,124 @@ import { ChatComponent } from './chat/chat.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   isChatOpen = false;
-  messages: string[] = [];
+  messages: { content: string; senderId: number }[] = [];
   newMessage: string = '';
   threadId: number | null = null;
 
-  constructor(private http: HttpClient) {}
+  senderId: number = 1;
+  receiverId: number = 2;
 
-  // Ouvre ou ferme la fenêtre de chat
+  private refreshInterval: any = null;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.senderId = params['senderId'] ? +params['senderId'] : 1;
+      this.receiverId = params['receiverId'] ? +params['receiverId'] : 2;
+    });
+  }
+
+  ngOnDestroy() {
+    this.clearMessageInterval();
+  }
+
   toggleChatWindow() {
     this.isChatOpen = !this.isChatOpen;
 
     if (this.isChatOpen) {
-      // Vérifie si un threadId est déjà en localStorage
       const storedThreadId = localStorage.getItem('threadId');
       if (storedThreadId) {
-        this.threadId = parseInt(storedThreadId, 10);
-        this.getMessages(); // Charge les messages existants
+        this.threadId = +storedThreadId;
+        this.getMessages();
+        this.startMessageInterval();
       }
+    } else {
+      this.clearMessageInterval();
     }
   }
 
-  // Récupère les messages du thread existant
   getMessages() {
     if (this.threadId !== null) {
-      this.http.get<any[]>(`http://localhost:8080/api/threads/${this.threadId}/messages`).subscribe(
-        (response) => {
-          // Tri par ordre chronologique (timestamp croissant)
-          const sortedMessages = response.sort((a, b) =>
-            new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-          );
-  
-          // Extraire uniquement le contenu des messages
-          this.messages = sortedMessages.map(msg => msg.content);
-        },
-        (error) => {
-          console.error('Erreur lors de la récupération des messages:', error);
-        }
-      );
-    }
-  }
-  
-
-  // Gère l'envoi d'un message
-  sendMessage(message: string) {
-    if (message.trim()) {
-      if (!this.threadId) {
-        this.createThread().subscribe(
+      this.http
+        .get<{
+          id: number;
+          sender: { id: number; firstName: string; lastName: string; };
+          receiver: any;
+          thread: any;
+          content: string;
+          timestamp: string;
+        }[]>(
+          `http://localhost:8080/api/threads/${this.threadId}/messages`
+        )
+        .subscribe(
           (response) => {
-            this.threadId = response.id;
-            localStorage.setItem('threadId', this.threadId.toString());
-            this.sendMessageToBackend(message);
+            console.log('RAW messages from API:', response);
+            const sorted = response.sort(
+              (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+            );
+            this.messages = sorted.map(msg => ({
+              content: msg.content,
+              senderId: msg.sender.id
+            }));
           },
-          (error) => {
-            console.error('Erreur lors de la création du thread:', error);
-          }
+          (err) => console.error('Erreur getMessages:', err)
         );
-      } else {
-        this.sendMessageToBackend(message);
-      }
     }
   }
 
-  // Envoie le message avec le threadId actuel
-  sendMessageToBackend(message: string) {
-    const payload = {
-      senderId: 1,
-      receiverId: 2,
-      threadId: this.threadId,
-      content: message,
-      type: 'CHAT'
+  sendMessage(message: string) {
+    if (!message.trim()) return;
+
+    const doSend = () => {
+      const payload = {
+        senderId: this.senderId,
+        receiverId: this.receiverId,
+        threadId: this.threadId,
+        content: message,
+        type: 'CHAT'
+      };
+      this.http.post('http://localhost:8080/api/messages', payload).subscribe(
+        () => {
+          this.messages.push({ content: message, senderId: this.senderId });
+        },
+        (err) => console.error('Erreur sendMessage:', err)
+      );
     };
 
-    this.http.post('http://localhost:8080/api/messages', payload).subscribe(
-      (response) => {
-        this.messages.push(message);
-        this.newMessage = '';
-      },
-      (error) => {
-        console.error("Erreur lors de l'envoi du message:", error);
-      }
+    if (!this.threadId) {
+      this.createThread().subscribe(
+        (resp) => {
+          this.threadId = resp.id;
+          localStorage.setItem('threadId', this.threadId.toString());
+          doSend();
+          this.startMessageInterval();
+        },
+        (err) => console.error('Erreur createThread:', err)
+      );
+    } else {
+      doSend();
+    }
+  }
+
+  createThread() {
+    return this.http.post<{ id: number }>(
+      `http://localhost:8080/api/threads?userId=${this.senderId}`,
+      {}
     );
   }
 
-  // Crée un nouveau thread si nécessaire
-  createThread() {
-    return this.http.post<{ id: number }>('http://localhost:8080/api/threads?userId=1', {});
+  private startMessageInterval() {
+    this.clearMessageInterval();
+    this.refreshInterval = setInterval(() => this.getMessages(), 2000);
+  }
+
+  private clearMessageInterval() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
+    }
   }
 }

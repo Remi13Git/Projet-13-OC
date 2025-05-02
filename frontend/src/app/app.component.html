@@ -5,6 +5,7 @@
 <app-chat
   *ngIf="isChatOpen"
   [messages]="messages"
+  [currentUserId]="senderId"
   (sendMessageEvent)="sendMessage($event)"
   (close)="toggleChatWindow()"
 ></app-chat>

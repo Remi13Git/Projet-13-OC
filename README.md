@@ -51,3 +51,9 @@ L'application sera accessible à l'adresse suivante :
 ```bash
 http://localhost:4200
 ```
+
+Si vous souhaitez répondre dans la conversation via l'id du support, utilisez cette url : 
+
+```bash
+http://localhost:4200/?senderId=2&receiverId=1
+```

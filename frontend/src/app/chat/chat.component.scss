@@ -84,3 +84,43 @@
     }
   }
   
+
+  .chat-body {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+  }
+  
+  .chat-message {
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 12px;
+    max-width: 70%;
+    color: #fff;
+  }
+  
+  .from-me {
+    background-color: #007bff;
+    align-self: flex-end;
+  }
+  
+  .from-other {
+    background-color: #28a745;
+    align-self: flex-start;
+  }
+  
+  .chat-input {
+    display: flex;
+    padding: 8px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 8px;
+  }
+  
+  .send-btn {
+    margin-left: 8px;
+  }
+  
