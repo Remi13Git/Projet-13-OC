@@ -27,6 +27,8 @@ CREATE TABLE Vehicle (
  model         VARCHAR(100),
  acriss_code   CHAR(4),
  price_per_day DECIMAL(5,2) NOT NULL
+ agency_id INT NOT NULL,
+ FOREIGN KEY (agency_id) REFERENCES Agency(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE Reservation (
@@ -59,10 +61,8 @@ CREATE TABLE Message (
  content     TEXT NOT NULL,
  timestamp   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  type ENUM('CHAT','FORMULAIRE') NOT NULL DEFAULT 'CHAT',
- seen BOOLEAN NOT NULL DEFAULT FALSE,
  FOREIGN KEY (sender_id)   REFERENCES `User`(id)       ON DELETE CASCADE,
  FOREIGN KEY (receiver_id) REFERENCES `User`(id)       ON DELETE CASCADE,
  FOREIGN KEY (thread_id)   REFERENCES ChatThread(id)   ON DELETE CASCADE,
  INDEX idx_thread_timestamp (thread_id, timestamp),
- INDEX idx_message_unseen  (thread_id, seen)
 ) ENGINE=InnoDB;
