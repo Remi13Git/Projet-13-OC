@@ -1,0 +1,16 @@
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/DemoApplication.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/config/WebConfig.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/controller/MessageController.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/controller/ThreadController.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/dto/ChatMessageDTO.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/ChatThread.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/Message.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/MessageType.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/ThreadStatus.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/User.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/entity/UserRole.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/repository/ChatThreadRepository.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/repository/MessageRepository.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/repository/UserRepository.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/service/ChatThreadService.java
+/Users/remi/Documents/Projet-13-OC/backend/src/main/java/com/example/demo/service/MessageService.java

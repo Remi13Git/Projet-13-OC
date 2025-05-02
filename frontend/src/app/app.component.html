@@ -1,0 +1,10 @@
+<div class="chat-icon" (click)="toggleChatWindow()">
+  <i class="fas fa-headset"></i>
+</div>
+
+<app-chat
+  *ngIf="isChatOpen"
+  [messages]="messages"
+  (sendMessageEvent)="sendMessage($event)"
+  (close)="toggleChatWindow()"
+></app-chat>

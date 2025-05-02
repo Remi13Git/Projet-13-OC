@@ -1,0 +1,18 @@
+<div class="chat-window">
+    <div class="chat-header">
+      <span>Chat</span>
+      <button (click)="closeChatWindow()">X</button>
+    </div>
+    <div class="chat-body" #chatBody>
+      <div *ngFor="let message of messages" class="chat-message">
+        <p>{{ message }}</p>
+      </div>
+    </div>
+    <div class="chat-input">
+        <input [(ngModel)]="newMessage" (keydown.enter)="send()" placeholder="Écrivez votre message ici..." />
+        <button class="send-btn" (click)="send()">
+          <i class="fa fa-paper-plane"></i>
+        </button>        
+    </div>
+  </div>
+  
