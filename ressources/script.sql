@@ -5,6 +5,7 @@ CREATE TABLE `User` (
  id INT AUTO_INCREMENT PRIMARY KEY,
  first_name VARCHAR(100) NOT NULL,
  last_name  VARCHAR(100) NOT NULL,
+ language   VARCHAR(10) NOT NULL DEFAULT 'EN',
  email      VARCHAR(255) NOT NULL UNIQUE,
  password   VARCHAR(255) NOT NULL,
  role ENUM('CLIENT','SUPPORT') NOT NULL DEFAULT 'CLIENT'
@@ -26,7 +27,7 @@ CREATE TABLE Vehicle (
  brand         VARCHAR(100),
  model         VARCHAR(100),
  acriss_code   CHAR(4),
- price_per_day DECIMAL(5,2) NOT NULL
+ price_per_day DECIMAL(5,2) NOT NULL,
  agency_id INT NOT NULL,
  FOREIGN KEY (agency_id) REFERENCES Agency(id)
 ) ENGINE=InnoDB;

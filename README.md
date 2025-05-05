@@ -8,7 +8,7 @@
 
 2. Importez le projet dans votre IDE préféré (par exemple, IntelliJ IDEA ou Eclipse) en tant que projet Maven.
 
-3. Configurer le fichier `application.properties` pour la connexion à la base de données
+3. Configurez le fichier `application.properties` pour la connexion à la base de données
 
 Pour créer votre base de données MySQL, utilisez le schema présent dans `ressources/sql/script.sql`
 
@@ -40,7 +40,7 @@ mvn spring-boot:run
 ```
 
 
-Afin de démarrer le frontend, retournez sur votre fenetre Front et lancez le serveur avec la commande suivante : 
+Afin de démarrer le frontend, retournez sur votre fenetre frontend et lancez le serveur avec la commande suivante : 
 
 ```bash
 ng serve
